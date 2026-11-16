@@ -12,7 +12,7 @@ Acuerdo entre los dos integrantes para que los módulos encajen al unirlos. Si a
 | Pantallas de reportes (formulario, listado, filtros) | B | Hecho en la Fase 1 |
 | Usuarios, registro/login, roles | A | Pendiente |
 | Panel de administración | A | Pendiente |
-| Subida de fotos a Blob Storage (`/api/fotos`) | A | Pendiente |
+| Subida de fotos a Blob Storage (`/api/fotos`) | A | Hecho |
 | Infraestructura Azure y despliegue automático | A | Pendiente |
 
 ## Modelo de datos
@@ -88,13 +88,15 @@ Ejemplo de `PATCH /api/reportes/{id}/estado`:
 
 El frontend envía `Authorization: Bearer <token>` en las rutas protegidas. Al integrar, B ajusta `frontend/src/api.js` para incluir el token y el backend toma `usuario_id` del token en `POST /api/reportes`.
 
-### Fotos (A, propuesta)
+### Fotos (A, implementado)
 
-| Método | Ruta | Descripción |
-|---|---|---|
-| POST | `/api/fotos` | Recibe `multipart/form-data` con el campo `archivo` (imagen), la sube a Blob Storage y devuelve `{ "url": "https://..." }` |
+| Método | Ruta | Descripción | Respuesta |
+|---|---|---|---|
+| POST | `/api/fotos` | Recibe `multipart/form-data` con el campo `archivo` (imagen), la sube a Blob Storage y devuelve `{ "url": "https://..." }` | 201 con la URL; 400 si falta el archivo o no es JPG, PNG, WEBP o GIF; 413 si pesa más de 5 MB; 503 si Blob Storage no está configurado o falla |
 
-Flujo en el formulario de B: sube la foto a `/api/fotos`, recibe la `url` y la envía como `fotoUrl` al crear el reporte. Mientras A no lo tenga, `fotoUrl` queda vacío.
+El formato se reconoce por el contenido del archivo (no por su nombre) y la foto se guarda con un nombre único (`<uuid>.<ext>`) en el contenedor `AZURE_STORAGE_CONTAINER`, que tiene lectura pública a blobs.
+
+Flujo en el formulario de B: sube la foto a `/api/fotos`, recibe la `url` y la envía como `fotoUrl` al crear el reporte.
 
 ## Variables de entorno
 

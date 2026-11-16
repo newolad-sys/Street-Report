@@ -4,6 +4,8 @@ import { CATEGORIAS } from '../constants';
 
 const VACIO = { titulo: '', descripcion: '', categoria: 'BACHE', direccion: '' };
 const MAX_FOTO_MB = 5;
+// Los mismos formatos que acepta el backend (POST /api/fotos)
+const TIPOS_FOTO = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
 export default function ReporteForm({ onCreado }) {
   const [datos, setDatos] = useState(VACIO);
@@ -32,8 +34,8 @@ export default function ReporteForm({ onCreado }) {
   function elegirFoto(e) {
     const archivo = e.target.files?.[0];
     if (!archivo) return;
-    if (!archivo.type.startsWith('image/')) {
-      setError('El archivo debe ser una imagen.');
+    if (!TIPOS_FOTO.includes(archivo.type)) {
+      setError('La foto debe ser una imagen JPG, PNG, WEBP o GIF.');
       e.target.value = '';
       return;
     }
@@ -152,7 +154,7 @@ export default function ReporteForm({ onCreado }) {
 
       <label>
         Foto (opcional, máx. {MAX_FOTO_MB} MB)
-        <input ref={inputFoto} type="file" accept="image/*" onChange={elegirFoto} />
+        <input ref={inputFoto} type="file" accept={TIPOS_FOTO.join(',')} onChange={elegirFoto} />
       </label>
       {previa && (
         <div className="previa">
