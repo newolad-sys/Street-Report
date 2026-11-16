@@ -1,0 +1,22 @@
+# Secretos
+.env
+.env.*
+!.env.example
+
+# Backend
+backend/target/
+*.class
+*.log
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Frontend compilado que se copia al backend para el despliegue
+backend/src/main/resources/static/
+
+# IDEs y sistema
+.idea/
+*.iml
+.vscode/
+.DS_Store

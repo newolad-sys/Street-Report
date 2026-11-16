@@ -1,0 +1,16 @@
+# PostgreSQL para desarrollo local. Uso: docker compose up -d
+services:
+  db:
+    image: postgres:16
+    container_name: reportes-db
+    environment:
+      POSTGRES_DB: reportes
+      POSTGRES_USER: reportes
+      POSTGRES_PASSWORD: reportes
+    ports:
+      - "5432:5432"
+    volumes:
+      - reportes-datos:/var/lib/postgresql/data
+
+volumes:
+  reportes-datos:
